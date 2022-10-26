@@ -133,7 +133,7 @@ typedef struct Serial_Port_Handle
 static SERIAL_PORT_HANDLE_Typedef_t Serial_Device_List[SERIAL_PORT_NUM_MAX];
 
 /* 串口缓存 */
-static uint8_t Uart2_DMA_Buf[16] MATH_PORT_SECTION("USE_DMA_BUF_SPACE") = {0};
+static uint8_t Uart2_DMA_Buf[1024] MATH_PORT_SECTION("USE_DMA_BUF_SPACE") = {0};
 /** Private function prototypes ----------------------------------------------*/
 
 /** Private user code --------------------------------------------------------*/
@@ -945,7 +945,7 @@ void Serial_Port_Init(void)
     return;
   }
   pSerial_Device->pReceive_Buffer = Uart2_DMA_Buf;//(uint8_t *)SERIAL_PORT_MALLOC(1024);
-  pSerial_Device->Buffer_Size = 16;
+  pSerial_Device->Buffer_Size = 1024;
 
   pSerial_Device->pStart = UART_Start;
   pSerial_Device->pInit = UART_Init;
@@ -1004,6 +1004,10 @@ void Serial_Port_Init(void)
   pSerial_Device->OUTepNum = CDC_OUT_EP;
   pSerial_Device->pSerial_Rec_IT = CDC_Receive_Complete_IT;
 #endif
+  
+  printf("Serial Port Init OK.\r\n");
+  printf("Serial Device List Size = %u Bytes.\r\n", sizeof(Serial_Device_List));
+  
 }
 
 #ifdef __cplusplus ///<end extern c
